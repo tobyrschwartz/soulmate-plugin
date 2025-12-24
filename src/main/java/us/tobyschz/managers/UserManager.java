@@ -1,7 +1,9 @@
 package us.tobyschz.managers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import us.tobyschz.models.User;
+import us.tobyschz.utils.Debug;
 
 import java.util.*;
 
@@ -13,6 +15,7 @@ public class UserManager {
     }
 
     public User add(Player player) {
+        Debug.log("Adding user " + player.getName() + " to the online user list");
         return onlineUsers.computeIfAbsent(
                 player.getUniqueId(),
                 User::new
@@ -21,6 +24,10 @@ public class UserManager {
 
     public void remove(UUID uuid) {
         onlineUsers.remove(uuid);
+    }
+
+    public Player getPlayer(UUID uuid) {
+        return Bukkit.getPlayer(uuid);
     }
 
     public void shutdown() {
