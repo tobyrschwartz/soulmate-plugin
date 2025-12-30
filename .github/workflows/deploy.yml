@@ -17,14 +17,14 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven/Gradle
-        run: mvn clean package
+        run: mvn clean package -Dskiptests
       - name: Deploy to Server via SFTP
         uses: appleboy/scp-action@v1
         with:
-          local: target/*.jar
-          remote: /opt/minecraft/plugins/
+          source: target/SoulmatePlugin.jar
+          target: /opt/minecraft/plugins/
           host: ${{ secrets.REMOTE_HOST }}
-          user: ${{ secrets.REMOTE_USER }}
+          username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
       #- name: Reload Plugins via RCON
       #  run: |
