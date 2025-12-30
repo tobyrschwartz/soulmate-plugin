@@ -5,10 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import us.tobyschz.listeners.BedListener;
+import us.tobyschz.listeners.DamageListener;
 import us.tobyschz.listeners.JoinLeaveListener;
 import us.tobyschz.listeners.MovementListener;
 import us.tobyschz.managers.BondManager;
-import us.tobyschz.managers.DebugManager;
+import us.tobyschz.managers.ConfigManager;
 import us.tobyschz.managers.UserManager;
 import us.tobyschz.utils.Debug;
 
@@ -20,16 +21,16 @@ public final class SoulmatePlugin extends JavaPlugin {
     @Getter
     private UserManager userManager;
     @Getter
-    private DebugManager debugManager;
+    private ConfigManager configManager;
 
     @Override
     public void onEnable() {
         getLogger().info("Starting soulmate plugin...");
 
         instance = this;
-        debugManager = new DebugManager();
 
-        if (debugManager.isEnabled()) {
+        configManager = new ConfigManager();
+        if (configManager.isDebug()) {
             Debug.log("DEBUG MODE IS ON");
         }
 
@@ -54,5 +55,6 @@ public final class SoulmatePlugin extends JavaPlugin {
         pm.registerEvents(new JoinLeaveListener(), this);
         pm.registerEvents(new MovementListener(), this);
         pm.registerEvents(new BedListener(), this);
+        pm.registerEvents(new DamageListener(), this);
     }
 }

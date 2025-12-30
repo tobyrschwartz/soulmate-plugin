@@ -2,7 +2,7 @@ package us.tobyschz.models;
 
 import java.util.UUID;
 
-public record Bond(UUID user1, UUID user2) {
+public record Bond(UUID user1, UUID user2, long last_together) {
     public UUID getPartner(UUID uuid) {
         if (uuid.equals(user1)) return user2;
         if (uuid.equals(user2)) return user1;

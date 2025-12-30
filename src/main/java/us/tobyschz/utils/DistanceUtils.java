@@ -10,9 +10,14 @@ public class DistanceUtils {
         Location loc1 = player1.getLocation();
         Location loc2 = player2.getLocation();
 
+        double distance = calcDistance(loc1, loc2);
+        return loc1.distance(loc2);
+    }
+
+    public static double calcDistance(Location loc1, Location loc2) {
         double distance = loc1.distance(loc2);
         Debug.log("Distance calculated: " + distance);
-        return loc1.distance(loc2);
+        return distance;
     }
 
 }

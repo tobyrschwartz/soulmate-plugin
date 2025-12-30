@@ -1,1 +1,4 @@
+debug: true
 penalty_distance: 50
+max_time_apart: 24000
+damage_multiplier: 0.3

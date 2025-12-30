@@ -33,6 +33,7 @@ public class BedListener implements Listener {
             Block bed = event.getBed();
             Debug.log("Adding pending bed for " + event.getPlayer().getName());
             Optional<UUID> bonded = bondManager.addPendingBed(uuid, new BedKey(
+                    bed.getWorld().getFullTime(),
                     bed.getWorld().getUID(),
                     bed.getX(),
                     bed.getY(),

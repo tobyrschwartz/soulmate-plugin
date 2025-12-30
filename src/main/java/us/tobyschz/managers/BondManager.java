@@ -4,7 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import us.tobyschz.SoulmatePlugin;
 import us.tobyschz.models.BedKey;
 import us.tobyschz.models.Bond;
@@ -37,7 +40,7 @@ public class BondManager {
             if (records == null) return;
 
             for (BondRecord r : records) {
-                Bond bond = new Bond(r.user1(), r.user2());
+                Bond bond = new Bond(r.user1(), r.user2(), r.timestamp());
                 bonds.put(r.user1(), bond);
                 bonds.put(r.user2(), bond);
             }
@@ -51,7 +54,7 @@ public class BondManager {
         List<BondRecord> records = new ArrayList<>();
 
         for (Bond bond : uniqueBonds) {
-            records.add(new BondRecord(bond.user1(), bond.user2()));
+            records.add(new BondRecord(bond.user1(), bond.user2(), bond.last_together()));
         }
 
         try {
@@ -73,10 +76,14 @@ public class BondManager {
                 .map(bond -> Bukkit.getPlayer(bond.getPartner(player.getUniqueId())));
     }
 
+    public Bond getBond(UUID uuid) {
+        return bonds.get(uuid);
+    }
+
     public Optional<UUID> addPendingBed(UUID uuid, BedKey bedKey) {
         for (Map.Entry<UUID, BedKey> entry : pendingBeds.entrySet()) {
             if (areBedsAdjacent(entry.getValue(), bedKey)) {
-                createBond(uuid, entry.getKey());
+                createBond(uuid, entry.getKey(), bedKey.time());
                 pendingBeds.remove(entry.getKey());
                 return Optional.ofNullable(entry.getKey());
             }
@@ -85,8 +92,8 @@ public class BondManager {
         return Optional.empty();
     }
 
-    public void createBond(UUID uuid, UUID partner) {
-        Bond bond = new Bond(uuid, partner);
+    public void createBond(UUID uuid, UUID partner, long timestamp) {
+        Bond bond = new Bond(uuid, partner, timestamp);
         bonds.put(uuid, bond);
         bonds.put(partner, bond);
     }
@@ -94,9 +101,20 @@ public class BondManager {
     public void removePendingBed(UUID uuid) {
         pendingBeds.remove(uuid);
     }
+
+    public void applyPenalty(Player player, Player partner, long diff, long penalty_time) {
+        int periods_apart = Math.toIntExact(diff / ((penalty_time > 0) ? penalty_time : 1));
+        PotionEffect effect = new PotionEffect(PotionEffectType.HUNGER, periods_apart * 20 * 60, 1);
+        player.addPotionEffect(effect);
+        partner.addPotionEffect(effect);
+        player.sendMessage(ChatColor.RED + "You have been apart for too long and now have hunger for " +
+                periods_apart + "minutes!");
+        partner.sendMessage(ChatColor.RED + "You have been apart for too long and now have hunger for " +
+                periods_apart + "minutes!");
+    }
 }
 
-record BondRecord (UUID user1, UUID user2) {}
+record BondRecord (UUID user1, UUID user2, long timestamp) {}
 
 
 

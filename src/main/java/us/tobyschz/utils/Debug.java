@@ -2,13 +2,13 @@ package us.tobyschz.utils;
 
 import org.bukkit.Bukkit;
 import us.tobyschz.SoulmatePlugin;
-import us.tobyschz.managers.DebugManager;
+import us.tobyschz.managers.ConfigManager;
 
 public class Debug {
-    private static final DebugManager manager = SoulmatePlugin.getInstance().getDebugManager();
+    private static final ConfigManager manager = SoulmatePlugin.getInstance().getConfigManager();
 
     public static void log(String msg) {
-        if (!manager.isEnabled()) return;
+        if (!manager.isDebug()) return;
         Bukkit.getLogger().warning("[DEBUG] " + msg);
     }
 }
