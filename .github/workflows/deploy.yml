@@ -19,7 +19,7 @@ jobs:
       - name: Build with Maven/Gradle
         run: mvn clean package
       - name: Deploy to Server via SFTP
-        uses: nschloe/action-scp@master
+        uses: appleboy/scp-action@v1
         with:
           local: target/*.jar
           remote: /opt/minecraft/plugins/
