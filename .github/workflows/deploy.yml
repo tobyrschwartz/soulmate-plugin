@@ -26,6 +26,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          strip_components: 1
           overwrite: true
       #- name: Reload Plugins via RCON
       #  run: |
