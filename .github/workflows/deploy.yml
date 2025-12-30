@@ -26,6 +26,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          overwrite: true
       #- name: Reload Plugins via RCON
       #  run: |
       #    sudo apt-get install mcrcon -y
