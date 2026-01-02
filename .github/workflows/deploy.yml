@@ -22,7 +22,7 @@ jobs:
         uses: appleboy/scp-action@v1
         with:
           source: target/SoulmatePlugin.jar
-          target: /opt/minecraft/plugins/
+          target: /minecraft/plugins/
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
