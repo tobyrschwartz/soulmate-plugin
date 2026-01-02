@@ -27,7 +27,8 @@ public class DamageListener implements Listener {
         Optional<Player> partner = bondManager.getOnlineBondPartner(p);
         partner.ifPresent(player -> {
             double expectedDamage = e.getDamage() * configManager.getDamageMultiplier();
-            player.damage(e.getDamage() * configManager.getDamageMultiplier(), e.getDamageSource());
+            if (player.getHealth() <= expectedDamage) return;
+            player.damage(expectedDamage, e.getDamageSource());
             player.sendMessage(ChatColor.RED + "Took " + expectedDamage + " damage!");
         });
     }

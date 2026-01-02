@@ -11,6 +11,7 @@ import us.tobyschz.listeners.MovementListener;
 import us.tobyschz.managers.BondManager;
 import us.tobyschz.managers.ConfigManager;
 import us.tobyschz.managers.UserManager;
+import us.tobyschz.tasks.ParticleTask;
 import us.tobyschz.utils.Debug;
 
 public final class SoulmatePlugin extends JavaPlugin {
@@ -41,6 +42,7 @@ public final class SoulmatePlugin extends JavaPlugin {
         bondManager = new BondManager();
 
         registerListeners();
+        registerTasks();
     }
 
     @Override
@@ -56,5 +58,9 @@ public final class SoulmatePlugin extends JavaPlugin {
         pm.registerEvents(new MovementListener(), this);
         pm.registerEvents(new BedListener(), this);
         pm.registerEvents(new DamageListener(), this);
+    }
+
+    public void registerTasks() {
+        new ParticleTask(this).runTaskTimer(this, 0L, 5L);
     }
 }

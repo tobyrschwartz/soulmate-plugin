@@ -54,7 +54,7 @@ public class BondManager {
         List<BondRecord> records = new ArrayList<>();
 
         for (Bond bond : uniqueBonds) {
-            records.add(new BondRecord(bond.user1(), bond.user2(), bond.last_together()));
+            records.add(new BondRecord(bond.user1(), bond.user2(), bond.lastTogether()));
         }
 
         try {
@@ -111,6 +111,15 @@ public class BondManager {
                 periods_apart + "minutes!");
         partner.sendMessage(ChatColor.RED + "You have been apart for too long and now have hunger for " +
                 periods_apart + "minutes!");
+    }
+
+    public boolean hasBondAndIsClose(UUID uuid) {
+        return bonds.containsKey(uuid) && bonds.get(uuid).isClose();
+    }
+
+    public boolean hasBondAndIsClose(Player p) {
+        UUID uuid = p.getUniqueId();
+        return bonds.containsKey(uuid) && bonds.get(uuid).isClose();
     }
 }
 

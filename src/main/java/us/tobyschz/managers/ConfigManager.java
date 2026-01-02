@@ -10,6 +10,7 @@ public class ConfigManager {
     private int penaltyDistance;
     private long maxTimeApart;
     private double damageMultiplier;
+    private int perkDistance;
 
     public ConfigManager() {
         load(SoulmatePlugin.getInstance());
@@ -21,5 +22,6 @@ public class ConfigManager {
         penaltyDistance = plugin.getConfig().getInt("penalty_distance");
         maxTimeApart = plugin.getConfig().getLong("max_time_apart");
         damageMultiplier = plugin.getConfig().getDouble("damage_multiplier");
+        perkDistance = plugin.getConfig().getInt("perk_distance");
     }
 }
