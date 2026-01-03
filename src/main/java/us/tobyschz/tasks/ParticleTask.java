@@ -23,7 +23,7 @@ public class ParticleTask extends BukkitRunnable {
             Location loc = p.getLocation().add(0, 1.2, 0);
 
             bondManager.getOnlineBondPartner(p).ifPresent(partner -> {
-                p.spawnParticle(
+                partner.spawnParticle(
                         Particle.HEART,
                         loc,
                         2,

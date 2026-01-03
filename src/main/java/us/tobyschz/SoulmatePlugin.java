@@ -61,6 +61,6 @@ public final class SoulmatePlugin extends JavaPlugin {
     }
 
     public void registerTasks() {
-        new ParticleTask(this).runTaskTimer(this, 0L, 5L);
+        new ParticleTask(this).runTaskTimer(this, 0L, 20L);
     }
 }
