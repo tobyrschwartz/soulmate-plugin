@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import us.tobyschz.SoulmatePlugin;
 import us.tobyschz.managers.BondManager;
 import us.tobyschz.managers.ConfigManager;
+import us.tobyschz.utils.Debug;
 
 import java.util.Optional;
 
@@ -18,10 +19,9 @@ public class DamageListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if (!(e.getEntity() instanceof Player)) {
+        if (!(e.getEntity() instanceof Player p)) {
             return;
         }
-        Player p = (Player) e.getEntity();
         if (e.getCause() == EntityDamageEvent.DamageCause.VOID) return;
 
         Optional<Player> partner = bondManager.getOnlineBondPartner(p);

@@ -103,14 +103,15 @@ public class BondManager {
     }
 
     public void applyPenalty(Player player, Player partner, long diff, long penalty_time) {
-        int periods_apart = Math.toIntExact(diff / ((penalty_time > 0) ? penalty_time : 1));
+        return;
+        /*int periods_apart = Math.toIntExact(diff / ((penalty_time > 0) ? penalty_time : 1));
         PotionEffect effect = new PotionEffect(PotionEffectType.HUNGER, periods_apart * 20 * 60, 1);
         player.addPotionEffect(effect);
         partner.addPotionEffect(effect);
         player.sendMessage(ChatColor.RED + "You have been apart for too long and now have hunger for " +
                 periods_apart + "minutes!");
         partner.sendMessage(ChatColor.RED + "You have been apart for too long and now have hunger for " +
-                periods_apart + "minutes!");
+                periods_apart + "minutes!");*/
     }
 
     public boolean hasBondAndIsClose(UUID uuid) {
