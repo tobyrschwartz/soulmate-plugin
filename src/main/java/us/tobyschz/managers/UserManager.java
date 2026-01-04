@@ -30,6 +30,10 @@ public class UserManager {
         return Bukkit.getPlayer(uuid);
     }
 
+    public boolean isOnline(UUID uuid) {
+        return onlineUsers.containsKey(uuid);
+    }
+
     public void shutdown() {
         onlineUsers.clear();
     }

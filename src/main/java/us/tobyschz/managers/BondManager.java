@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import us.tobyschz.SoulmatePlugin;
 import us.tobyschz.models.BedKey;
 import us.tobyschz.models.Bond;
@@ -23,10 +20,10 @@ public class BondManager {
     private final HashMap<UUID, BedKey> pendingBeds = new HashMap<>();
     private final File file;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final UserManager userManager = SoulmatePlugin.getInstance().getUserManager();
 
     public BondManager() {
         this.file = new File(SoulmatePlugin.getInstance().getDataFolder(), "bonds.json");
-
         loadBonds();
     }
 
@@ -40,7 +37,10 @@ public class BondManager {
             if (records == null) return;
 
             for (BondRecord r : records) {
-                Bond bond = new Bond(r.user1(), r.user2(), r.timestamp());
+                int online = 0;
+                if (userManager.isOnline(r.user1())) online++;
+                if (userManager.isOnline(r.user2())) online++;
+                Bond bond = new Bond(r.user1(), r.user2(), r.timeApart(), online);
                 bonds.put(r.user1(), bond);
                 bonds.put(r.user2(), bond);
             }
@@ -54,7 +54,7 @@ public class BondManager {
         List<BondRecord> records = new ArrayList<>();
 
         for (Bond bond : uniqueBonds) {
-            records.add(new BondRecord(bond.user1(), bond.user2(), bond.lastTogether()));
+            records.add(new BondRecord(bond.getUser1(), bond.getUser2(), bond.getTimeApart()));
         }
 
         try {
@@ -83,7 +83,7 @@ public class BondManager {
     public Optional<UUID> addPendingBed(UUID uuid, BedKey bedKey) {
         for (Map.Entry<UUID, BedKey> entry : pendingBeds.entrySet()) {
             if (areBedsAdjacent(entry.getValue(), bedKey)) {
-                createBond(uuid, entry.getKey(), bedKey.time());
+                createBond(uuid, entry.getKey(), 0, 2);
                 pendingBeds.remove(entry.getKey());
                 return Optional.ofNullable(entry.getKey());
             }
@@ -92,8 +92,8 @@ public class BondManager {
         return Optional.empty();
     }
 
-    public void createBond(UUID uuid, UUID partner, long timestamp) {
-        Bond bond = new Bond(uuid, partner, timestamp);
+    public void createBond(UUID uuid, UUID partner, long timeApart, int online) {
+        Bond bond = new Bond(uuid, partner, timeApart, online);
         bonds.put(uuid, bond);
         bonds.put(partner, bond);
     }
@@ -102,29 +102,48 @@ public class BondManager {
         pendingBeds.remove(uuid);
     }
 
-    public void applyPenalty(Player player, Player partner, long diff, long penalty_time) {
-        return;
-        /*int periods_apart = Math.toIntExact(diff / ((penalty_time > 0) ? penalty_time : 1));
-        PotionEffect effect = new PotionEffect(PotionEffectType.HUNGER, periods_apart * 20 * 60, 1);
-        player.addPotionEffect(effect);
-        partner.addPotionEffect(effect);
-        player.sendMessage(ChatColor.RED + "You have been apart for too long and now have hunger for " +
-                periods_apart + "minutes!");
-        partner.sendMessage(ChatColor.RED + "You have been apart for too long and now have hunger for " +
-                periods_apart + "minutes!");*/
-    }
-
     public boolean hasBondAndIsClose(UUID uuid) {
         return bonds.containsKey(uuid) && bonds.get(uuid).isClose();
     }
 
     public boolean hasBondAndIsClose(Player p) {
         UUID uuid = p.getUniqueId();
-        return bonds.containsKey(uuid) && bonds.get(uuid).isClose();
+        return hasBondAndIsClose(uuid);
+    }
+
+    public boolean hasBond(Player p) {
+        return hasBond(p.getUniqueId());
+    }
+
+    public Bond getBond(Player p) {
+        return getBond(p.getUniqueId());
+    }
+
+    public Collection<Bond> getBonds() {
+        return bonds.values();
+    }
+
+    public void setOnline(UUID uuid, boolean online) {
+        Bond bond = bonds.get(uuid);
+        if (bond != null) {
+            bond.setOnline(bond.getOnline() + (online ? 1 : -1 ));
+        }
+    }
+
+    public Player[] getOnlinePlayers(Bond bond) {
+        Player[] players = new Player[2];
+        players[0] = userManager.getPlayer(bond.getUser1());
+        players[1] = userManager.getPlayer(bond.getUser2());
+        return players;
+    }
+
+
+    public void setOnline(Player player,  boolean online) {
+        setOnline(player.getUniqueId(), online);
     }
 }
 
-record BondRecord (UUID user1, UUID user2, long timestamp) {}
+record BondRecord (UUID user1, UUID user2, long timeApart) {}
 
 
 

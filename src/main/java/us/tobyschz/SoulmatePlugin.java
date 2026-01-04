@@ -11,6 +11,8 @@ import us.tobyschz.listeners.MovementListener;
 import us.tobyschz.managers.BondManager;
 import us.tobyschz.managers.ConfigManager;
 import us.tobyschz.managers.UserManager;
+import us.tobyschz.tasks.BondTimingTask;
+import us.tobyschz.tasks.EffectTask;
 import us.tobyschz.tasks.ParticleTask;
 import us.tobyschz.utils.Debug;
 
@@ -61,6 +63,8 @@ public final class SoulmatePlugin extends JavaPlugin {
     }
 
     public void registerTasks() {
-        new ParticleTask(this).runTaskTimer(this, 0L, 20L);
+        new ParticleTask().runTaskTimer(this, 0L, 20L);
+        new EffectTask().runTaskTimer(this, 0L, 20L);
+        new BondTimingTask().runTaskTimer(this, 0L, 20L);
     }
 }

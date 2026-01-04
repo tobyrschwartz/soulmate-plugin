@@ -20,12 +20,14 @@ public class JoinLeaveListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         userManager.add(player);
+        bondManager.setOnline(player, true);
     }
 
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
+        bondManager.setOnline(player, false);
         userManager.remove(uuid);
         bondManager.removePendingBed(uuid);
     }

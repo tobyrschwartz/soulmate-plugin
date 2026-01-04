@@ -6,19 +6,31 @@ import lombok.Setter;
 import java.util.Objects;
 import java.util.UUID;
 
+@Getter
 public class Bond {
     private final UUID user1;
     private final UUID user2;
     @Setter
-    private long lastTogether;
-    @Getter
+    private long timeApart;
+    @Setter
+    private boolean perkClose = false;
     @Setter
     private boolean close = false;
+    @Setter
+    private int online;
 
-    public Bond(UUID user1, UUID user2, long lastTogether) {
+    public Bond(UUID user1, UUID user2, long timeApart, int online) {
         this.user1 = user1;
         this.user2 = user2;
-        this.lastTogether = lastTogether;
+        this.timeApart = timeApart;
+        this.online = online;
+    }
+
+    public Bond(UUID user1, UUID user2, long timeApart) {
+        this.user1 = user1;
+        this.user2 = user2;
+        this.timeApart = timeApart;
+        this.online = 0;
     }
 
     public UUID getPartner(UUID uuid) {
@@ -31,16 +43,8 @@ public class Bond {
         return uuid.equals(user1) || uuid.equals(user2);
     }
 
-    public UUID user1() {
-        return user1;
-    }
-
-    public UUID user2() {
-        return user2;
-    }
-
-    public long lastTogether() {
-        return lastTogether;
+    public void incrementTimeApart() {
+        timeApart = timeApart + 1;
     }
 
     @Override
@@ -50,12 +54,12 @@ public class Bond {
         var that = (Bond) obj;
         return Objects.equals(this.user1, that.user1) &&
                 Objects.equals(this.user2, that.user2) &&
-                this.lastTogether == that.lastTogether;
+                this.timeApart == that.timeApart;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user1, user2, lastTogether);
+        return Objects.hash(user1, user2, timeApart);
     }
 
     @Override
@@ -63,7 +67,7 @@ public class Bond {
         return "Bond[" +
                 "user1=" + user1 + ", " +
                 "user2=" + user2 + ", " +
-                "lastTogether=" + lastTogether + ']';
+                "timeApart=" + timeApart + ']';
     }
 
 }
